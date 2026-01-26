@@ -1,6 +1,7 @@
 type CourseCardProps={
     title:string,
-    progress:number
+    level:string,
+    students:number
 }
 
 export default function CourseCard(props:CourseCardProps)
@@ -14,7 +15,8 @@ export default function CourseCard(props:CourseCardProps)
         marginBottom: "12px",
     }}>
         <h3>{props.title}</h3>
-        <p>Progress: {props.progress}%</p>
+        <p>Level : {props.level}</p>
+        <p>Students : {props.students}</p>
         <button>Enroll Now</button>
     </div>
     </>

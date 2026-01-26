@@ -1,31 +1,36 @@
 import CourseCard from './CourseCard';
 import Header from './Header';
 import {useState} from 'react';
+import EnrollmentCard from './EnrollmentCard';
+import SearchBar from './SearchBar';
+import Courses from '../data/Courses.json';
 
-export default function Dashboard() {
+type DashboardProps={
+  studentName:string;
+}
 
-  const [progress,setProgress] = useState<number>(0);
+
+export default function Dashboard({studentName}:DashboardProps) {
+
+  const studentNameLocal=studentName;
+  console.log(studentNameLocal);
+
+
+  const [progress,setProgress] = useState<number>(40);
+  const [reactProgress,setReactProgress] = useState<number>(40);
+  const [enrolled,setEnrolled]=useState<boolean>(false);
   const [student,setStudent]=useState({
     name: "Amit",
     course : "Full Stack Development",
     progress : "45%",
   });
-  const [courses,setCourses]=useState([
-    {
-      title: "React",
-      progress: 35,
-    },
-    {
-      title: "Java",
-      progress: 50,
-    },
-    {
-      title: "DSA",
-      progress: 90,
-    },
-  ]);
+  const [courses,setCourses]=useState(Courses);
 
   console.log(courses);
+
+  const handleEnroll=()=>{
+    setEnrolled(true);
+  }
 
   return (
     <>
@@ -52,14 +57,29 @@ export default function Dashboard() {
           <p>Your Learning Overview</p>
         </div>
 
+        <SearchBar />
+
         {/* Enrolled Courses */}
         <div>
         <h3>Enrolled Courses</h3>
-        {courses.map((course) => (
+
+        <EnrollmentCard onEnroll={handleEnroll} />
+        <p>Status : {enrolled ? "Enrolled" : "Not Enrolled"}</p>
+        
+        {courses.length===0?(
+          <p>No courses enrolled yet.</p>
+        ):courses.map((course)=>(
+          <CourseCard title={course.title} level={course.level} students={course.students}/>
+        ))}
+
+        {/* {courses.map((course) => (
           <>
           <CourseCard title={course.title} progress={course.progress}/>
           </>
-        ))}
+        ))} */}
+
+        {/* <CourseCard title="React" progress={reactProgress} />
+        <button onClick={()=>setReactProgress(reactProgress+10)}>Complete React Lesson</button> */}
 
         {/*}
         <p>Course Progress : {progress}</p>

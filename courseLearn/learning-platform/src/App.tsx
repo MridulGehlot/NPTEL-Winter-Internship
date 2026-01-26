@@ -5,7 +5,7 @@ function App() {
   return (
     <>
     <div>
-      <Dashboard />
+      <Dashboard studentName="Amit"/>
     </div>
     </>
   )
