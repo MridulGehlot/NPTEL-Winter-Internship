@@ -1,0 +1,36 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependencies
+*.log
+.DS_Store
+.env*.local
+.env
+
+# Vite/React/Vue builds
+dist/
+build/
+
+# package files
+package-lock.json  # Optional: commit yarn.lock instead if using Yarn
+pnpm-lock.yaml
+
+# IDE/editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+ehthumbs.db
+
+# Embedded repos/submodules (from your log)
+courseLearn/task-manager-app/
+vinternship/
+
+# Zips (large binaries)
+*.zip
