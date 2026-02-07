@@ -1,0 +1,30 @@
+[
+    {
+            "id":1,
+            "name":"John Doe",
+            "doctorId":1,
+            "doctorName":"Dr. Smith",
+            "appointmentId":1
+    },
+    {
+            "id":2,
+            "name":"Jane Smith",
+            "doctorId":2,
+            "doctorName":"Dr. Johnson",
+            "appointmentId":2
+    },
+    {
+            "id":3,
+            "name":"Bob Johnson",
+            "doctorId":3,
+            "doctorName":"Dr. Lee",
+            "appointmentId":3
+    },
+    {
+            "id":4,
+            "name":"Alice Brown",
+            "doctorId":4,
+            "doctorName":"Dr. Davis",
+            "appointmentId":4
+    }
+]
