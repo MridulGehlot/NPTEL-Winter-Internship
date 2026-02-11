@@ -1,0 +1,104 @@
+import express,{Request,Response,NextFunction,ErrorRequestHandler, RequestHandler} from "express";
+import {ApiError,InsufficientPointsError} from "./errors";
+import {RedeemRequest,ApiResponse} from "./loyaltyProgram";
+import { z } from "zod";
+
+
+// Add this before your routes
+const findMember = (customerId: string) => {
+  // Mock data - replace with real database lookup
+  return { customerId, points: 1000 };
+};
+
+
+const app=express();
+const router=express.Router()
+app.use(express.json());
+app.use("/api",router)
+
+// Define error handler separately with proper type
+const errorHandler: ErrorRequestHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
+  if (err instanceof ApiError) {
+    res.status(err.statusCode).json({
+      status: "error",
+      error: err.message,
+      details: err.details,
+    });
+  } else {
+    console.error(err);
+    res.status(500).json({ 
+      status: "error", 
+      error: "Internal server error" 
+    });
+  }
+};
+
+// Then use it
+app.use(errorHandler);
+
+
+/*
+ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  if (err instanceof ApiError) {
+    res.status(err.statusCode).json({
+      status: "error",
+      error: err.message,
+      details: err.details,
+    });
+  } else {
+    // Log unexpected errors but don’t expose details
+    console.error(err);
+    res.status(500).json({ 
+      status: "error", 
+      error: "Internal server error" 
+    });
+  }
+});
+*/
+
+const RedeemSchema = z.object({
+  customerId: z.string().uuid(),
+  points: z.number().int().positive(),
+});
+
+router.post("/redeem", (req, res) => {
+  const result = RedeemSchema.safeParse(req.body);
+  if (!result.success) {
+    return res.status(400).json({
+      status: "error",
+      error: result.error.issues[0].message,
+    });
+  }
+  // Proceed with validated data (result.data)
+});
+
+function validate<T extends z.ZodTypeAny>(schema: T): RequestHandler {
+  return (req, res, next) => {
+    const result = schema.safeParse(req.body);
+    if (!result.success) {
+      return res.status(400).json({ 
+        status: "error", 
+        error: result.error.issues[0].message 
+      });
+    }
+    req.body = result.data; // Override req.body with parsed data
+    next();
+  };
+}
+
+// Usage
+router.post("/redeem", validate(RedeemSchema), (req, res) => {
+  // req.body is now validated and typed!
+});
+
+router.post("/redeem", validate(RedeemSchema), (req, res) => {
+  const member = findMember(req.body.customerId);
+  if (member.points < req.body.points) {
+    throw new InsufficientPointsError(); // Caught by global middleware
+  }
+  // ...redeem points...
+});
+
+app.listen(3000,()=>{
+console.log("Server is Running");
+});
