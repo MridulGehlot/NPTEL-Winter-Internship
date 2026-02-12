@@ -1,0 +1,70 @@
+db.users.insertOne({
+  _id: ObjectId("665f4d7e8b3e6c1e24a7b3e1"),
+  name: "Alice",
+  balance: 400.00
+});
+
+db.users.insertOne({
+  _id: ObjectId("665f4d7e8b3e6c1e24a7b3e2"), 
+  name: "Merchant",
+  balance: 600.00
+});
+
+db.transactions.insertOne({
+  _id: ObjectId("665f4d7e8b3e6c1e24a7b3e3"),
+  from: ObjectId("665f4d7e8b3e6c1e24a7b3e1"),  // Alice
+  to: ObjectId("665f4d7e8b3e6c1e24a7b3e2"),    // Merchant
+  amount: 100.00,
+  date: new Date(),
+  status: "completed"
+});
+
+// 2. REFUND TRANSACTION (Challenge Solution)
+const session = db.getMongo().startSession();
+session.startTransaction();
+
+try {
+  // STEP 1: Refund Alice (add back to sender)
+  const aliceUpdate = db.users.updateOne(
+    { _id: ObjectId("665f4d7e8b3e6c1e24a7b3e1") },
+    { $inc: { balance: 100.00 } },  // Refund amount
+    { session }
+  );
+
+  // STEP 2: Deduct from Merchant (recipient pays refund)
+  const merchantUpdate = db.users.updateOne(
+    { _id: ObjectId("665f4d7e8b3e6c1e24a7b3e2") },
+    { $inc: { balance: -100.00 } },
+    { session }
+  );
+
+  // STEP 3: Mark original payment as "refunded"
+  db.transactions.updateOne(
+    { _id: ObjectId("665f4d7e8b3e6c1e24a7b3e3") },
+    { $set: { status: "refunded" } },
+    { session }
+  );
+
+  // STEP 4: Log refund transaction
+  db.transactions.insertOne(
+    {
+      from: ObjectId("665f4d7e8b3e6c1e24a7b3e2"),     // Merchant → Alice
+      to: ObjectId("665f4d7e8b3e6c1e24a7b3e1"),
+      amount: 100.00,
+      date: new Date(),
+      type: "refund",
+      originalTransaction: ObjectId("665f4d7e8b3e6c1e24a7b3e3"),
+      status: "completed"
+    },
+    { session }
+  );
+
+  // COMMIT: All succeed or none do
+  session.commitTransaction();
+
+} catch (error) {
+  // ABORT: Rollback everything if ANY step fails
+  session.abortTransaction();
+} finally {
+  session.endSession();
+}

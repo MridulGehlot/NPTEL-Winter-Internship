@@ -1,0 +1,37 @@
+db.dishes.insertOne({
+  name:"Tofu Buddha Bowl",
+  cuisine:"Asian",
+  price:{
+    value:9.5,
+    currency:"USD"
+  },
+  tags:["vegan","gluten-free"],
+  available:true
+});
+
+db.dishes.find(
+  {
+    available:true,
+    tags: "vegan",
+    "price.value" : {$lt:12},
+    "price.currency" : "USD"
+  },
+  {name:1,price:1,_id:0}
+  )
+  
+db.dishes.updateOne(
+  {
+    name:"Tofu Buddha Bowl"
+  },
+  {
+    $set: {"price.value":10},
+    $push : {tags:"popular"}
+  }
+  );
+  
+
+db.dishes.deleteOne({
+  name:"Old Special Soup"
+});
+
+db.dishes.find();

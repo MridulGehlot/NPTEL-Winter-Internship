@@ -1,0 +1,37 @@
+db.watchHistory.insertMany([
+  { movie: "Dune Part 2", genre: "Sci-Fi", country: "USA", year: 2024, views: 25000, rating: 8.7 },
+  { movie: "Oppenheimer", genre: "Drama", country: "USA", year: 2024, views: 18000, rating: 8.4 },
+  { movie: "Deadpool 3", genre: "Action", country: "USA", year: 2024, views: 32000, rating: 8.1 },
+  { movie: "Barbie", genre: "Comedy", country: "USA", year: 2024, views: 9000, rating: 7.9 },
+  { movie: "Poor Things", genre: "Drama", country: "UK", year: 2024, views: 12000, rating: 8.2 },
+  { movie: "Spider-Man", genre: "Action", country: "USA", year: 2024, views: 28000, rating: 8.3 },
+  { movie: "Everything Everywhere", genre: "Sci-Fi", country: "USA", year: 2024, views: 15000, rating: 8.6 }
+]);
+
+db.watchHistory.aggregate([
+  // 1. Filter 2024 movies (EARLY match = FAST)
+  { $match: { year: 2024 } },
+  
+  // 2. Group by genre, calculate totals
+  { $group: {
+      _id: "$genre",
+      totalViews: { $sum: "$views" },
+      avgRating: { $avg: "$rating" }
+    }
+  },
+  
+  // 3. Filter genres with >10,000 total views
+  { $match: { totalViews: { $gt: 10000 } } },
+  
+  // 4. Clean output: rename + round rating to 1 decimal
+  { $project: {
+      _id: 0,
+      genre: "$_id",
+      avgRating: { $round: ["$avgRating", 1] },
+      totalViews: 1
+    }
+  },
+  
+  // 5. Sort by total views (descending)
+  { $sort: { totalViews: -1 } }
+]);

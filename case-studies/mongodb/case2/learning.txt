@@ -1,0 +1,45 @@
+db.products.insertOne({
+  name:"Wireless Headphones",
+  category:"Electronics",
+  price: {
+    value: 99.99,
+    currency: "USD"
+  },
+  stock:50,
+  ratings: [4.5,4.7,4.8]
+});
+
+db.products.insertOne({
+  name:"Watch",
+  category:"Electronics",
+  price: {
+    value: 59.99,
+    currency: "USD"
+  },
+  stock:8,
+  ratings: [4.9]
+});
+
+db.products.find({
+  category:"Electronics",
+  stock: {$gt:0}
+})
+
+db.products.find(
+  {category:"Electronics"},
+  { name:1,  price:1,  _id:0  }
+  )
+  
+db.products.find().sort({"price.value":-1});
+
+db.products.updateOne(
+  {name:"Watch"},
+  {$set: {stock:45}}
+  );
+  
+db.products.updateOne(
+  {name:"Watch"},
+  {$inc : {stock:-15}}
+  )
+  
+db.products.find({name:"Watch"})
