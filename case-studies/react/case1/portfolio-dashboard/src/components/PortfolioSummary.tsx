@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { PortfolioSummaryProps } from '../types/asset';
+
+
 
 const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({ assets }) => {
   const totalValue: number = assets.reduce((sum, asset) => sum + asset.value, 0);
   const averageChange: number = assets.length > 0 
     ? assets.reduce((sum, asset) => sum + asset.change, 0) / assets.length 
     : 0;
+
 
   return (
     <div className="portfolio-summary" style={{ 

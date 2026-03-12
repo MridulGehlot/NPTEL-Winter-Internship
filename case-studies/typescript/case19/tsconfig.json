@@ -5,6 +5,7 @@
     "module": "commonjs",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "forceConsistentCasingInFileNames":false,
     "strict": true,
     "rootDir": "./src",
     "outDir": "./dist"
