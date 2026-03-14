@@ -13,3 +13,6 @@ const country:string="India"
 //country="USA"
 //Cannot redeclare block-scoped variable 'score'.
 //let score:number=55
+
+console.log("Score ",score);
+console.log(country);

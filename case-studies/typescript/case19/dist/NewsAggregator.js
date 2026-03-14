@@ -14,7 +14,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NewsAggregator = void 0;
 const typedi_1 = require("typedi");
-const RSSFeedSource_1 = require("./RSSFeedSource");
+const NewsSource_1 = require("./NewsSource");
 let NewsAggregator = class NewsAggregator {
     constructor(source) {
         this.source = source;
@@ -27,6 +27,6 @@ let NewsAggregator = class NewsAggregator {
 exports.NewsAggregator = NewsAggregator;
 exports.NewsAggregator = NewsAggregator = __decorate([
     (0, typedi_1.Service)(),
-    __param(0, (0, typedi_1.Inject)(() => RSSFeedSource_1.RSSFeedSource)),
+    __param(0, (0, typedi_1.Inject)(NewsSource_1.NewsSourceToken)),
     __metadata("design:paramtypes", [Object])
 ], NewsAggregator);

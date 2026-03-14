@@ -1,14 +1,15 @@
 import "reflect-metadata";
 import { Container } from "typedi";
-import { newsAggregator } from "./newsAggregator";
+import { NewsAggregator } from "./NewsAggregator";
 import { APISource } from "./APIsource";
 import { NewsSource } from "./NewsSource";
+import { NewsSourceToken } from "./NewsSource";
 
 async function main() {
 
-  Container.set(NewsSource, new APISource());
+  Container.set(NewsSourceToken, new APISource());
 
-  const aggregator = Container.get(newsAggregator);
+  const aggregator = Container.get(NewsAggregator);
   const articles = await aggregator.getLatestArticles();
 
   console.log(articles);

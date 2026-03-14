@@ -1,11 +1,12 @@
 import {Service,Inject} from "typedi";
-import {NewsSource} from "./NewsSource";
+import {NewsSource,NewsSourceToken} from "./NewsSource";
 import {RSSFeedSource} from "./RSSFeedSource";
 @Service()
 export class NewsAggregator
 {
 constructor(
-@Inject(()=>RSSFeedSource) private source:NewsSource
+@Inject(NewsSourceToken)
+private source:NewsSource
 ){}
 async getLatestArticles():Promise<void>
 {
